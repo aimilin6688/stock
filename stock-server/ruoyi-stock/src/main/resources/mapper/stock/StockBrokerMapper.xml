@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockBrokerMapper">
+    
+    <resultMap type="StockBroker" id="StockBrokerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="exePath"    column="exe_path"    />
+    </resultMap>
+
+    <sql id="selectStockBrokerVo">
+        select id, name, type, create_time, exe_path from stock_broker
+    </sql>
+
+    <select id="selectStockBrokerList" parameterType="StockBroker" resultMap="StockBrokerResult">
+        <include refid="selectStockBrokerVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockBrokerById" parameterType="Long" resultMap="StockBrokerResult">
+        <include refid="selectStockBrokerVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectStockBrokerListByClientId" parameterType="Long" resultType="com.ruoyi.stock.domain.StockBroker">
+        <include refid="selectStockBrokerVo"/>
+        INNER JOIN stock_client_brokers as scb on scb.brokers_id = id
+        where scb.clients_id = #{clientId}
+    </select>
+
+    <insert id="insertStockBroker" parameterType="StockBroker" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_broker
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="exePath != null">exe_path,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="exePath != null">#{exePath},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockBroker" parameterType="StockBroker">
+        update stock_broker
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="exePath != null">exe_path = #{exePath},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockBrokerById" parameterType="Long">
+        delete from stock_broker where id = #{id}
+    </delete>
+
+    <delete id="deleteStockBrokerByIds" parameterType="String">
+        delete from stock_broker where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

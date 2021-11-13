@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockEntrustMapper">
+    
+    <resultMap type="StockEntrust" id="StockEntrustResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="date"    column="date"    />
+        <result property="stockCode"    column="stock_code"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="entrustNo"    column="entrust_no"    />
+        <result property="entrustDate"    column="entrust_date"    />
+        <result property="entrustTime"    column="entrust_time"    />
+        <result property="type"    column="type"    />
+        <result property="num"    column="num"    />
+        <result property="price"    column="price"    />
+        <result property="dealNum"    column="deal_num"    />
+        <result property="dealPrice"    column="deal_price"    />
+        <result property="remark"    column="remark"    />
+        <result property="stockHolder"    column="stock_holder"    />
+        <result property="tradingMarket"    column="trading_market"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectStockEntrustVo">
+        select id, account_id, date, stock_code, stock_name, entrust_no, entrust_date, entrust_time, type, num, price, deal_num, deal_price, remark, stock_holder, trading_market from stock_entrust
+    </sql>
+
+    <select id="selectStockEntrustList" parameterType="StockEntrust" resultMap="StockEntrustResult">
+        <include refid="selectStockEntrustVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="stockCode != null  and stockCode != ''"> and stock_code = #{stockCode}</if>
+            <if test="stockName != null  and stockName != ''"> and stock_name like concat('%', #{stockName}, '%')</if>
+            <if test="entrustNo != null  and entrustNo != ''"> and entrust_no = #{entrustNo}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockEntrustById" parameterType="Long" resultMap="StockEntrustResult">
+        <include refid="selectStockEntrustVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStockEntrust" parameterType="StockEntrust">
+        insert into stock_entrust
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="date != null">date,</if>
+            <if test="stockCode != null">stock_code,</if>
+            <if test="stockName != null">stock_name,</if>
+            <if test="entrustNo != null">entrust_no,</if>
+            <if test="entrustDate != null">entrust_date,</if>
+            <if test="entrustTime != null">entrust_time,</if>
+            <if test="type != null">type,</if>
+            <if test="num != null">num,</if>
+            <if test="price != null">price,</if>
+            <if test="dealNum != null">deal_num,</if>
+            <if test="dealPrice != null">deal_price,</if>
+            <if test="remark != null">remark,</if>
+            <if test="stockHolder != null">stock_holder,</if>
+            <if test="tradingMarket != null">trading_market,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="stockCode != null">#{stockCode},</if>
+            <if test="stockName != null">#{stockName},</if>
+            <if test="entrustNo != null">#{entrustNo},</if>
+            <if test="entrustDate != null">#{entrustDate},</if>
+            <if test="entrustTime != null">#{entrustTime},</if>
+            <if test="type != null">#{type},</if>
+            <if test="num != null">#{num},</if>
+            <if test="price != null">#{price},</if>
+            <if test="dealNum != null">#{dealNum},</if>
+            <if test="dealPrice != null">#{dealPrice},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="stockHolder != null">#{stockHolder},</if>
+            <if test="tradingMarket != null">#{tradingMarket},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockEntrust" parameterType="StockEntrust">
+        update stock_entrust
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="stockCode != null">stock_code = #{stockCode},</if>
+            <if test="stockName != null">stock_name = #{stockName},</if>
+            <if test="entrustNo != null">entrust_no = #{entrustNo},</if>
+            <if test="entrustDate != null">entrust_date = #{entrustDate},</if>
+            <if test="entrustTime != null">entrust_time = #{entrustTime},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="dealNum != null">deal_num = #{dealNum},</if>
+            <if test="dealPrice != null">deal_price = #{dealPrice},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="stockHolder != null">stock_holder = #{stockHolder},</if>
+            <if test="tradingMarket != null">trading_market = #{tradingMarket},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockEntrustById" parameterType="Long">
+        delete from stock_entrust where id = #{id}
+    </delete>
+
+    <delete id="deleteStockEntrustByIds" parameterType="String">
+        delete from stock_entrust where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByAccountIdAndDate">
+        delete from stock_entrust where account_id = #{accountId} and  `date` = DATE_FORMAT(#{date} , '%Y-%m-%d')
+    </delete>
+
+</mapper>

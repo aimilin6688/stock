@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockEntrustCancelMapper">
+    
+    <resultMap type="StockEntrustCancel" id="StockEntrustCancelResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="type"    column="type"    />
+        <result property="codes"    column="codes"    />
+        <result property="entrustNos"    column="entrust_nos"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="exeResult"    column="exe_result"    />
+        <result property="exeTime"    column="exe_time"    />
+    </resultMap>
+
+    <sql id="selectStockEntrustCancelVo">
+        select id, account_id, type, codes, entrust_nos, create_time, exe_result, exe_time from stock_entrust_cancel
+    </sql>
+
+    <select id="selectStockEntrustCancelList" parameterType="StockEntrustCancel" resultMap="StockEntrustCancelResult">
+        <include refid="selectStockEntrustCancelVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="codes != null  and codes != ''"> and codes = #{codes}</if>
+            <if test="entrustNos != null  and entrustNos != ''"> and entrust_nos = #{entrustNos}</if>
+            <if test="exeResult != null  and exeResult != ''"> and exe_result = #{exeResult}</if>
+            <if test="exeTime != null "> and exe_time = #{exeTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockEntrustCancelById" parameterType="Long" resultMap="StockEntrustCancelResult">
+        <include refid="selectStockEntrustCancelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStockEntrustCancel" parameterType="StockEntrustCancel">
+        insert into stock_entrust_cancel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="type != null">type,</if>
+            <if test="codes != null">codes,</if>
+            <if test="entrustNos != null">entrust_nos,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="exeResult != null">exe_result,</if>
+            <if test="exeTime != null">exe_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="codes != null">#{codes},</if>
+            <if test="entrustNos != null">#{entrustNos},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="exeResult != null">#{exeResult},</if>
+            <if test="exeTime != null">#{exeTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockEntrustCancel" parameterType="StockEntrustCancel">
+        update stock_entrust_cancel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="codes != null">codes = #{codes},</if>
+            <if test="entrustNos != null">entrust_nos = #{entrustNos},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="exeResult != null">exe_result = #{exeResult},</if>
+            <if test="exeTime != null">exe_time = #{exeTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockEntrustCancelById" parameterType="Long">
+        delete from stock_entrust_cancel where id = #{id}
+    </delete>
+
+    <delete id="deleteStockEntrustCancelByIds" parameterType="String">
+        delete from stock_entrust_cancel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

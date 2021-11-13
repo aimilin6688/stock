@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockClientMapper">
+    
+    <resultMap type="StockClient" id="StockClientResult">
+        <result property="id"    column="id"    />
+        <result property="clientToken"    column="client_token"    />
+        <result property="hostIp"    column="host_ip"    />
+        <result property="hostName"    column="host_name"    />
+        <result property="name"    column="name"    />
+        <result property="lastConnectTime"    column="last_connect_time"    />
+        <result property="onLine"    column="on_line"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectStockClientVo">
+        select id, client_token, host_ip, host_name, name, last_connect_time, on_line, remark, status from stock_client
+    </sql>
+
+    <!-- 通过名称查询 -->
+    <select id="selectStockClientListByBrokerId" parameterType="Long" resultMap="StockClientResult">
+        <include refid="selectStockClientVo"/>
+        INNER JOIN stock_client_brokers as cb on id = cb.clients_id
+        where cb.brokers_id = #{brokerId}
+    </select>
+
+    <select id="selectStockClientList" parameterType="StockClient" resultMap="StockClientResult">
+        <include refid="selectStockClientVo"/>
+        <where>  
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="clientToken != null  and clientToken != ''"> and client_token = #{clientToken}</if>
+            <if test="hostIp != null  and hostIp != ''"> and host_ip like concat('%', #{hostIp}, '%')</if>
+            <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="onLine != null "> and on_line = #{onLine}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockClientById" parameterType="Long" resultMap="StockClientResult">
+        <include refid="selectStockClientVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectNameById" resultType="java.lang.String" parameterType="Long">
+        select name from stock_client where id =#{id}
+    </select>
+
+    <insert id="insertStockClient" parameterType="StockClient">
+        insert into stock_client
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="clientToken != null and clientToken != ''">client_token,</if>
+            <if test="hostIp != null">host_ip,</if>
+            <if test="hostName != null">host_name,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="lastConnectTime != null">last_connect_time,</if>
+            <if test="onLine != null">on_line,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="clientToken != null and clientToken != ''">#{clientToken},</if>
+            <if test="hostIp != null">#{hostIp},</if>
+            <if test="hostName != null">#{hostName},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="lastConnectTime != null">#{lastConnectTime},</if>
+            <if test="onLine != null">#{onLine},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockClient" parameterType="StockClient">
+        update stock_client
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientToken != null and clientToken != ''">client_token = #{clientToken},</if>
+            <if test="hostIp != null">host_ip = #{hostIp},</if>
+            <if test="hostName != null">host_name = #{hostName},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="lastConnectTime != null">last_connect_time = #{lastConnectTime},</if>
+            <if test="onLine != null">on_line = #{onLine},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockClientById" parameterType="String">
+        delete from stock_client where id = #{id}
+    </delete>
+
+    <delete id="deleteStockClientByIds" parameterType="String">
+        delete from stock_client where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

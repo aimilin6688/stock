@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "ruoyi.dingAccessToken",
+      "type": "java.lang.String",
+      "description": "钉钉群机器人access_token."
+    }
+  ] }

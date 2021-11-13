@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockAccountMapper">
+    
+    <resultMap type="StockAccount" id="StockAccountResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="comPassword"    column="com_password"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="reportName"    column="report_name"    />
+        <result property="creditorStatus"    column="creditor_status"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="reportStatus"    column="report_status"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="brokerId"    column="broker_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="sort"    column="sort"    />
+        <result property="top"    column="top"    />
+        <association property="broker"    column="broker_id" javaType="StockBroker" resultMap="brokerResult" />
+        <association property="client"    column="client_id" javaType="StockClient" resultMap="clientResult" />
+    </resultMap>
+
+    <resultMap id="brokerResult" type="StockBroker">
+        <result property="id"    column="sb_id"    />
+        <result property="name"    column="sb_name"    />
+        <result property="type"    column="sb_type"    />
+        <result property="createTime"    column="sb_create_time"    />
+        <result property="exePath"    column="sb_exe_path"    />
+    </resultMap>
+
+    <resultMap id="clientResult" type="StockClient">
+        <result property="id"    column="sc_id"    />
+        <result property="clientToken"    column="sc_client_token"    />
+        <result property="hostIp"    column="sc_host_ip"    />
+        <result property="hostName"    column="sc_host_name"    />
+        <result property="name"    column="sc_name"    />
+        <result property="lastConnectTime"    column="sc_last_connect_time"    />
+        <result property="onLine"    column="sc_on_line"    />
+        <result property="remark"    column="sc_remark"    />
+        <result property="status"    column="sc_status"    />
+    </resultMap>
+
+    <sql id="selectStockAccountVo">
+        select sa.id, sa.username, sa.password, sa.com_password, sa.nickname, sa.report_name, sa.creditor_status, sa.order_status, sa.report_status, sa.status, sa.type, sa.client_id, sa.broker_id, sa.create_time, sa.update_time,sa.sort,sa.top,
+               sb.id as sb_id, sb.name as sb_name, sb.type as sb_type, sb.create_time as sb_create_time, sb.exe_path as sb_exe_path,
+               sc.id as sc_id, sc.client_token as sc_client_token, sc.host_ip as sc_host_ip, sc.host_name as sc_host_name, sc.name as sc_name, sc.last_connect_time as sc_last_connect_time, sc.on_line as sc_on_line, sc.remark as sc_remark, sc.status as sc_status
+        from stock_account as sa
+            left join stock_broker sb on sb.id = sa.broker_id
+            left join stock_client sc on sc.id = sa.client_id
+    </sql>
+
+    <select id="selectStockAccountList" parameterType="StockAccount" resultMap="StockAccountResult">
+        <include refid="selectStockAccountVo"/>
+        <where>
+            <if test="id != null  and id != ''"> and sa.id = #{id}</if>
+            <if test="username != null  and username != ''"> and sa.username like concat('%', #{username}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and sa.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="reportName != null  and reportName != ''"> and sa.report_name like concat('%', #{reportName}, '%')</if>
+            <if test="creditorStatus != null "> and sa.creditor_status = #{creditorStatus}</if>
+            <if test="orderStatus != null "> and sa.order_status = #{orderStatus}</if>
+            <if test="reportStatus != null "> and sa.report_status = #{reportStatus}</if>
+            <if test="status != null "> and sa.status = #{status}</if>
+            <if test="type != null "> and sa.type = #{type}</if>
+            <if test="clientId != null "> and sa.client_id = #{clientId}</if>
+            <if test="brokerId != null "> and sa.broker_id = #{brokerId}</if>
+            <if test="params.accountIds !=null and params.accountIds.size > 0">
+                and sa.id in
+                <foreach item="id" collection="params.accountIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectStockAccountById" parameterType="Long" resultMap="StockAccountResult">
+        <include refid="selectStockAccountVo"/>
+        where sa.id = #{id}
+    </select>
+
+    <select id="selectSimpleVoList" parameterType="com.ruoyi.stock.domain.StockAccount" resultType="com.ruoyi.stock.domain.vo.SimpleAccountVo">
+        select sa.id, sa.nickname, sa.report_name as reportName, sb.name as brokerName,sb.id as brokerId, sc.name as clientName, sc.id as clientId
+        from stock_account as sa
+                 left join stock_broker sb on sb.id = sa.broker_id
+                 left join stock_client sc on sc.id = sa.client_id
+        <where>
+            <if test="id != null  and id != ''"> and sa.id = #{id}</if>
+            <if test="username != null  and username != ''"> and sa.username like concat('%', #{username}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and sa.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="reportName != null  and reportName != ''"> and sa.report_name like concat('%', #{reportName}, '%')</if>
+            <if test="creditorStatus != null "> and sa.creditor_status = #{creditorStatus}</if>
+            <if test="orderStatus != null "> and sa.order_status = #{orderStatus}</if>
+            <if test="reportStatus != null "> and sa.report_status = #{reportStatus}</if>
+            <if test="status != null "> and sa.status = #{status}</if>
+            <if test="type != null "> and sa.type = #{type}</if>
+            <if test="clientId != null "> and sa.client_id = #{clientId}</if>
+            <if test="brokerId != null "> and sa.broker_id = #{brokerId}</if>
+            <if test="params.accountIds !=null and params.accountIds.size > 0">
+                and sa.id in
+                <foreach item="id" collection="params.accountIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertStockAccount" parameterType="StockAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="comPassword != null">com_password,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="reportName != null">report_name,</if>
+            <if test="creditorStatus != null">creditor_status,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="reportStatus != null">report_status,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="brokerId != null">broker_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="sort != null">sort,</if>
+            <if test="top != null">top,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="comPassword != null">#{comPassword},</if>
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="reportName != null">#{reportName},</if>
+            <if test="creditorStatus != null">#{creditorStatus},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="reportStatus != null">#{reportStatus},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="brokerId != null">#{brokerId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="top != null">#{top},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockAccount" parameterType="StockAccount">
+        update stock_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="comPassword != null">com_password = #{comPassword},</if>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="reportName != null">report_name = #{reportName},</if>
+            <if test="creditorStatus != null">creditor_status = #{creditorStatus},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="reportStatus != null">report_status = #{reportStatus},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="brokerId != null">broker_id = #{brokerId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="top != null">top = #{top},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockAccountById" parameterType="Long">
+        delete from stock_account where id = #{id}
+    </delete>
+
+    <delete id="deleteStockAccountByIds" parameterType="String">
+        delete from stock_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

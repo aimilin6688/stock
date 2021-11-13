@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockAccountInitMapper">
+    
+    <resultMap type="StockAccountInit" id="StockAccountInitResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="initDate"    column="init_date"    />
+        <result property="initMoney"    column="init_money"    />
+        <result property="runDay"    column="run_day"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStockAccountInitVo">
+        select id, account_id, init_date, init_money, run_day, update_time from stock_account_init
+    </sql>
+
+    <select id="selectStockAccountInitList" parameterType="StockAccountInit" resultMap="StockAccountInitResult">
+        <include refid="selectStockAccountInitVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="initDate != null "> and init_date = #{initDate}</if>
+            <if test="initMoney != null "> and init_money = #{initMoney}</if>
+            <if test="runDay != null "> and run_day = #{runDay}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockAccountInitById" parameterType="Long" resultMap="StockAccountInitResult">
+        <include refid="selectStockAccountInitVo"/>
+        where account_id = #{accountId}
+    </select>
+    <select id="selectByAccountId" resultType="com.ruoyi.stock.domain.StockAccountInit">
+        <include refid="selectStockAccountInitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStockAccountInit" parameterType="StockAccountInit" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_account_init
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="initDate != null">init_date,</if>
+            <if test="initMoney != null">init_money,</if>
+            <if test="runDay != null">run_day,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="initDate != null">#{initDate},</if>
+            <if test="initMoney != null">#{initMoney},</if>
+            <if test="runDay != null">#{runDay},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockAccountInit" parameterType="StockAccountInit">
+        update stock_account_init
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="initDate != null">init_date = #{initDate},</if>
+            <if test="initMoney != null">init_money = #{initMoney},</if>
+            <if test="runDay != null">run_day = #{runDay},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockAccountInitById" parameterType="Long">
+        delete from stock_account_init where id = #{id}
+    </delete>
+
+    <delete id="deleteStockAccountInitByIds" parameterType="String">
+        delete from stock_account_init where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

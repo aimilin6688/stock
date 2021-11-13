@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockTradeDateMapper">
+
+    <resultMap type="com.ruoyi.stock.domain.StockTradeDate" id="StockTradeDateResult">
+        <result property="tradeDate"    column="trade_date"    />
+        <result property="isOpen"    column="is_open"    />
+    </resultMap>
+
+    <sql id="selectStockTradeDateVo">
+        select trade_date, is_open from stock_trade_date
+    </sql>
+
+    <select id="queryAfter" resultMap="StockTradeDateResult">
+        <include refid="selectStockTradeDateVo"/>
+        <![CDATA[ where trade_date >= #{date} and is_open = 1 ORDER BY trade_date asc  limit #{n},1 ]]>
+    </select>
+    <select id="queryBefore" resultMap="StockTradeDateResult">
+        <include refid="selectStockTradeDateVo"/>
+        <![CDATA[ where trade_date <= #{date} and is_open = 1 ORDER BY trade_date desc limit #{n},1 ]]>
+    </select>
+    <select id="isTradeDate" resultType="java.lang.Boolean">
+        select   trade_date from stock_trade_date where trade_date =#{date} and is_open = 1 limit 1
+    </select>
+</mapper>

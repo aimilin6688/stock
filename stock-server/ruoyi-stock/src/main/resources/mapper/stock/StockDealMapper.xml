@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockDealMapper">
+    
+    <resultMap type="StockDeal" id="StockDealResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="date"    column="date"    />
+        <result property="stockCode"    column="stock_code"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="dealDate"    column="deal_date"    />
+        <result property="dealTime"    column="deal_time"    />
+        <result property="num"    column="num"    />
+        <result property="price"    column="price"    />
+        <result property="money"    column="money"    />
+        <result property="type"    column="type"    />
+        <result property="dealNo"    column="deal_no"    />
+        <result property="entrustNo"    column="entrust_no"    />
+        <result property="stockHolder"    column="stock_holder"    />
+        <result property="tradingMarket"    column="trading_market"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectStockDealVo">
+        select id, account_id, date, stock_code, stock_name, deal_time, num, price, money, type, deal_no, entrust_no, stock_holder, create_time from stock_deal
+    </sql>
+
+    <select id="selectStockDealList" parameterType="StockDeal" resultMap="StockDealResult">
+        <include refid="selectStockDealVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''"> and date between #{params.beginDate} and #{params.endDate}</if>
+            <if test="stockCode != null  and stockCode != ''"> and stock_code = #{stockCode}</if>
+            <if test="stockName != null  and stockName != ''"> and stock_name like concat('%', #{stockName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="entrustNo != null  and entrustNo != ''"> and entrust_no = #{entrustNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockDealById" parameterType="Long" resultMap="StockDealResult">
+        <include refid="selectStockDealVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStockDeal" parameterType="StockDeal" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_deal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="date != null">date,</if>
+            <if test="stockCode != null and stockCode != ''">stock_code,</if>
+            <if test="stockName != null and stockName != ''">stock_name,</if>
+            <if test="dealDate != null">deal_date,</if>
+            <if test="dealTime != null">deal_time,</if>
+            <if test="num != null">num,</if>
+            <if test="price != null">price,</if>
+            <if test="money != null">money,</if>
+            <if test="type != null">type,</if>
+            <if test="dealNo != null">deal_no,</if>
+            <if test="entrustNo != null">entrust_no,</if>
+            <if test="stockHolder != null">stock_holder,</if>
+            <if test="tradingMarket != null">trading_market,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="stockCode != null and stockCode != ''">#{stockCode},</if>
+            <if test="stockName != null and stockName != ''">#{stockName},</if>
+            <if test="dealDate != null">#{dealDate},</if>
+            <if test="dealTime != null">#{dealTime},</if>
+            <if test="num != null">#{num},</if>
+            <if test="price != null">#{price},</if>
+            <if test="money != null">#{money},</if>
+            <if test="type != null">#{type},</if>
+            <if test="dealNo != null">#{dealNo},</if>
+            <if test="entrustNo != null">#{entrustNo},</if>
+            <if test="stockHolder != null">#{stockHolder},</if>
+            <if test="tradingMarket != null">#{tradingMarket},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockDeal" parameterType="StockDeal">
+        update stock_deal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="stockCode != null and stockCode != ''">stock_code = #{stockCode},</if>
+            <if test="stockName != null and stockName != ''">stock_name = #{stockName},</if>
+            <if test="dealDate != null">deal_date = #{dealDate},</if>
+            <if test="dealTime != null">deal_time = #{dealTime},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="dealNo != null">deal_no = #{dealNo},</if>
+            <if test="entrustNo != null">entrust_no = #{entrustNo},</if>
+            <if test="stockHolder != null">stock_holder = #{stockHolder},</if>
+            <if test="tradingMarket != null">trading_market = #{tradingMarket},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockDealById" parameterType="Long">
+        delete from stock_deal where id = #{id}
+    </delete>
+
+    <delete id="deleteStockDealByIds" parameterType="String">
+        delete from stock_deal where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByAccountIdAndDate">
+        delete from stock_deal where account_id = #{accountId} and  `date` = DATE_FORMAT(#{date} , '%Y-%m-%d')
+    </delete>
+
+</mapper>

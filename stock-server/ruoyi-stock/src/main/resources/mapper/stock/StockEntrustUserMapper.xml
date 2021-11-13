@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockEntrustUserMapper">
+    
+    <resultMap type="StockEntrustUser" id="StockEntrustUserResult">
+        <result property="id"    column="id"    />
+        <result property="messageId"    column="message_id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="date"    column="date"    />
+        <result property="stockCode"    column="stock_code"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="num"    column="num"    />
+        <result property="position"    column="position"    />
+        <result property="price"    column="price"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="entrustNo"    column="entrust_no"    />
+        <result property="entrustTime"    column="entrust_time"    />
+        <result property="entrustError"    column="entrust_error"    />
+        <result property="status"    column="status"    />
+        <result property="cancelNum"    column="cancel_num"    />
+        <result property="dealNum"    column="deal_num"    />
+        <result property="dealTime"    column="deal_time"    />
+        <result property="dealNo"    column="deal_no"    />
+        <result property="version"    column="version"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStockEntrustUserVo">
+        select id, message_id,account_id, date, stock_code, stock_name, num, position, price, type, create_time, entrust_no,entrust_time, entrust_error, status, cancel_num, deal_num, deal_time, deal_no, version, update_time from stock_entrust_user
+    </sql>
+
+    <select id="selectStockEntrustUserList" parameterType="StockEntrustUser" resultMap="StockEntrustUserResult">
+        <include refid="selectStockEntrustUserVo"/>
+        <where>
+            <if test="messageId != null "> and message_id = #{messageId}</if>
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="stockCode != null  and stockCode != ''"> and stock_code = #{stockCode}</if>
+            <if test="stockName != null  and stockName != ''"> and stock_name like concat('%', #{stockName}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="entrustNo != null  and entrustNo != ''"> and entrust_no = #{entrustNo}</if>
+            <if test="status != null  and status != ''"> and `status` = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectStockEntrustUserById" parameterType="Long" resultMap="StockEntrustUserResult">
+        <include refid="selectStockEntrustUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStockEntrustUser" parameterType="StockEntrustUser" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_entrust_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="messageId != null">message_id,</if>
+            <if test="date != null">date,</if>
+            <if test="stockCode != null and stockCode != ''">stock_code,</if>
+            <if test="stockName != null and stockName != ''">stock_name,</if>
+            <if test="num != null">num,</if>
+            <if test="position != null">position,</if>
+            <if test="price != null">price,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="entrustNo != null">entrust_no,</if>
+            <if test="entrustTime != null">entrust_time,</if>
+            <if test="entrustError != null">entrust_error,</if>
+            <if test="status != null">status,</if>
+            <if test="cancelNum != null">cancel_num,</if>
+            <if test="dealNum != null">deal_num,</if>
+            <if test="dealTime != null">deal_time,</if>
+            <if test="dealNo != null">deal_no,</if>
+            <if test="version != null">version,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="messageId != null">#{messageId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="stockCode != null and stockCode != ''">#{stockCode},</if>
+            <if test="stockName != null and stockName != ''">#{stockName},</if>
+            <if test="num != null">#{num},</if>
+            <if test="position != null">#{position},</if>
+            <if test="price != null">#{price},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="entrustError != null">#{entrustError},</if>
+            <if test="entrustNo != null">#{entrustNo},</if>
+            <if test="entrustTime != null">#{entrustTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="cancelNum != null">#{cancelNum},</if>
+            <if test="dealNum != null">#{dealNum},</if>
+            <if test="dealTime != null">#{dealTime},</if>
+            <if test="dealNo != null">#{dealNo},</if>
+            <if test="version != null">#{version},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockEntrustUser" parameterType="StockEntrustUser">
+        update stock_entrust_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="date != null">date = #{date},</if>
+            <if test="stockCode != null and stockCode != ''">stock_code = #{stockCode},</if>
+            <if test="stockName != null and stockName != ''">stock_name = #{stockName},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="entrustNo != null">entrust_no = #{entrustNo},</if>
+            <if test="entrustTime != null">entrust_time = #{entrustTime},</if>
+            <if test="entrustError != null">entrust_error = #{entrustError},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="cancelNum != null">cancel_num = #{cancelNum},</if>
+            <if test="dealNum != null">deal_num = #{dealNum},</if>
+            <if test="dealTime != null">deal_time = #{dealTime},</if>
+            <if test="dealNo != null">deal_no = #{dealNo},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where  id = #{id}
+    </update>
+
+    <update id="updateEntrustResult" parameterType="StockEntrustUser">
+        update stock_entrust_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entrustNo != null">entrust_no = #{entrustNo},</if>
+            <if test="entrustTime != null">entrust_time = #{entrustTime},</if>
+            <if test="entrustError != null">entrust_error = #{entrustError},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where  message_id = #{messageId} and account_id = #{accountId}
+    </update>
+
+    <delete id="deleteStockEntrustUserById" parameterType="Long">
+        delete from stock_entrust_user where id = #{id}
+    </delete>
+
+    <delete id="deleteStockEntrustUserByIds" parameterType="String">
+        delete from stock_entrust_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockPositionMapper">
+    
+    <resultMap type="StockPosition" id="StockPositionResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="date"    column="date"    />
+        <result property="stockCode"    column="stock_code"    />
+        <result property="stockName"    column="stock_name"    />
+        <result property="totalNum"    column="total_num"    />
+        <result property="sellNum"    column="sell_num"    />
+        <result property="freezeNum"    column="freeze_num"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="currentPrice"    column="current_price"    />
+        <result property="marketValue"    column="market_value"    />
+        <result property="profitLoss"    column="profit_loss"    />
+        <result property="profitLossRatio"    column="profit_loss_ratio"    />
+        <result property="todayProfitLoss"    column="today_profit_loss"    />
+        <result property="todayProfitLossRatio"    column="today_profit_loss_ratio"    />
+        <result property="stockHolder"    column="stock_holder"    />
+        <result property="tradingMarket"    column="trading_market"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectStockPositionVo">
+        select id, account_id, date, stock_code, stock_name, total_num, sell_num, freeze_num, cost_price, current_price, market_value, profit_loss, profit_loss_ratio, today_profit_loss, today_profit_loss_ratio, create_time from stock_position
+    </sql>
+
+    <select id="selectStockPositionList" parameterType="StockPosition" resultMap="StockPositionResult">
+        <include refid="selectStockPositionVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''"> and date between #{params.beginDate} and #{params.endDate}</if>
+            <if test="stockCode != null  and stockCode != ''"> and stock_code = #{stockCode}</if>
+            <if test="stockName != null  and stockName != ''"> and stock_name like concat('%', #{stockName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectStockPositionById" parameterType="Long" resultMap="StockPositionResult">
+        <include refid="selectStockPositionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStockPosition" parameterType="StockPosition" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="date != null">date,</if>
+            <if test="stockCode != null">stock_code,</if>
+            <if test="stockName != null">stock_name,</if>
+            <if test="totalNum != null">total_num,</if>
+            <if test="sellNum != null">sell_num,</if>
+            <if test="freezeNum != null">freeze_num,</if>
+            <if test="costPrice != null">cost_price,</if>
+            <if test="currentPrice != null">current_price,</if>
+            <if test="marketValue != null">market_value,</if>
+            <if test="profitLoss != null">profit_loss,</if>
+            <if test="profitLossRatio != null">profit_loss_ratio,</if>
+            <if test="todayProfitLoss != null">today_profit_loss,</if>
+            <if test="todayProfitLossRatio != null">today_profit_loss_ratio,</if>
+            <if test="stockHolder != null">stock_holder,</if>
+            <if test="tradingMarket != null">trading_market,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="stockCode != null">#{stockCode},</if>
+            <if test="stockName != null">#{stockName},</if>
+            <if test="totalNum != null">#{totalNum},</if>
+            <if test="sellNum != null">#{sellNum},</if>
+            <if test="freezeNum != null">#{freezeNum},</if>
+            <if test="costPrice != null">#{costPrice},</if>
+            <if test="currentPrice != null">#{currentPrice},</if>
+            <if test="marketValue != null">#{marketValue},</if>
+            <if test="profitLoss != null">#{profitLoss},</if>
+            <if test="profitLossRatio != null">#{profitLossRatio},</if>
+            <if test="todayProfitLoss != null">#{todayProfitLoss},</if>
+            <if test="todayProfitLossRatio != null">#{todayProfitLossRatio},</if>
+            <if test="stockHolder != null">#{stockHolder},</if>
+            <if test="tradingMarket != null">#{tradingMarket},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockPosition" parameterType="StockPosition">
+        update stock_position
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="stockCode != null">stock_code = #{stockCode},</if>
+            <if test="stockName != null">stock_name = #{stockName},</if>
+            <if test="totalNum != null">total_num = #{totalNum},</if>
+            <if test="sellNum != null">sell_num = #{sellNum},</if>
+            <if test="freezeNum != null">freeze_num = #{freezeNum},</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
+            <if test="currentPrice != null">current_price = #{currentPrice},</if>
+            <if test="marketValue != null">market_value = #{marketValue},</if>
+            <if test="profitLoss != null">profit_loss = #{profitLoss},</if>
+            <if test="profitLossRatio != null">profit_loss_ratio = #{profitLossRatio},</if>
+            <if test="todayProfitLoss != null">today_profit_loss = #{todayProfitLoss},</if>
+            <if test="todayProfitLossRatio != null">today_profit_loss_ratio = #{todayProfitLossRatio},</if>
+            <if test="stockHolder != null">stock_holder = #{stockHolder},</if>
+            <if test="tradingMarket != null">trading_market = #{tradingMarket},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStockPositionById" parameterType="Long">
+        delete from stock_position where id = #{id}
+    </delete>
+
+    <delete id="deleteStockPositionByIds" parameterType="String">
+        delete from stock_position where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByAccountIdAndDate">
+        delete from stock_position where account_id = #{accountId} and  `date` = DATE_FORMAT(#{date} , '%Y-%m-%d')
+    </delete>
+
+</mapper>

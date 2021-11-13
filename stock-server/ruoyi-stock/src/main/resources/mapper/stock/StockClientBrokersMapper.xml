@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.stock.mapper.StockClientBrokersMapper">
+    
+    <resultMap type="StockClientBrokers" id="StockClientBrokersResult">
+        <result property="clientsId"    column="clients_id"    />
+        <result property="brokersId"    column="brokers_id"    />
+    </resultMap>
+
+    <sql id="selectStockClientBrokersVo">
+        select clients_id, brokers_id from stock_client_brokers
+    </sql>
+
+    <select id="selectStockClientBrokersList" parameterType="StockClientBrokers" resultMap="StockClientBrokersResult">
+        <include refid="selectStockClientBrokersVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectStockClientBrokersById" parameterType="Long" resultMap="StockClientBrokersResult">
+        <include refid="selectStockClientBrokersVo"/>
+        where clients_id = #{clientsId}
+    </select>
+        
+    <insert id="insertStockClientBrokers" parameterType="StockClientBrokers">
+        insert into stock_client_brokers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clientsId != null">clients_id,</if>
+            <if test="brokersId != null">brokers_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clientsId != null">#{clientsId},</if>
+            <if test="brokersId != null">#{brokersId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStockClientBrokers" parameterType="StockClientBrokers">
+        update stock_client_brokers
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brokersId != null">brokers_id = #{brokersId},</if>
+        </trim>
+        where clients_id = #{clientsId}
+    </update>
+
+    <delete id="deleteStockClientBrokersById" parameterType="Long">
+        delete from stock_client_brokers where clients_id = #{clientsId}
+    </delete>
+
+    <delete id="deleteStockClientBrokersByIds" parameterType="String">
+        delete from stock_client_brokers where clients_id in 
+        <foreach item="clientsId" collection="array" open="(" separator="," close=")">
+            #{clientsId}
+        </foreach>
+    </delete>
+    
+</mapper>
